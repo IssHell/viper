@@ -1,0 +1,98 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "isshell@mac.com",
+    "longName": "viper",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/bluetooth.png",
+                "name": "BT_ON",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/battery__low_charging.png",
+                "name": "BATTERY_CHARGING",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/battery__low_20.png",
+                "name": "BATTERY_20",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/battery__low_40.png",
+                "name": "BATTERY_40",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/battery__low_60.png",
+                "name": "BATTERY_60",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/battery__low_80.png",
+                "name": "BATTERY_80",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/battery__low_100.png",
+                "name": "BATTERY_100",
+                "type": "png-trans"
+            },
+            {
+                "file": "fonts/mechan.ttf",
+                "name": "MECHA_34",
+                "type": "font"
+            },
+            {
+                "file": "fonts/mechan.ttf",
+                "name": "MECHA_24",
+                "type": "font"
+            },
+            {
+                "file": "fonts/mechan.ttf",
+                "name": "MECHA_18",
+                "type": "font"
+            },
+            {
+                "file": "fonts/mechan.ttf",
+                "name": "MECHA_14",
+                "type": "font"
+            },
+            {
+                "file": "fonts/mechan.ttf",
+                "name": "MECHA_10",
+                "type": "font"
+            },
+            {
+                "file": "fonts/SimplySquare.ttf",
+                "name": "SIMPLY_SQUARE_18",
+                "type": "font"
+            },
+            {
+                "file": "fonts/SimplySquare.ttf",
+                "name": "SIMPLY_SQUARE_28",
+                "type": "font"
+            },
+            {
+                "file": "fonts/SimplySquare.ttf",
+                "name": "SIMPLY_SQUARE_38",
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "viper",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "0fd7f77d-9371-4e8b-9641-e9d5737e87af",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
