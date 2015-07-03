@@ -2,6 +2,7 @@
 
 #define KEY_TEMPERATURE 0
 #define KEY_CONDITIONS 1
+#define KEY_IS_RED_ON  2
 
 static Window *s_main_window;
 static TextLayer *s_background_layer;
@@ -11,6 +12,7 @@ static TextLayer *s_main_hour_layer;
 static TextLayer *s_before_hour_1_layer;
 static TextLayer *s_after_hour_1_layer;
 static TextLayer *s_date_layer;
+static TextLayer *s_weather_layer;
 
 static Layer *s_main_minutes_layer;
 
@@ -59,15 +61,15 @@ static void update_time() {
     strftime(hour_after_1_buffer, sizeof("00"), "%I", tick_time);
   }
   
-  if ((hour_buffer[0] == '0')) {
+  if(hour_buffer[0] == '0') {
     memmove(hour_buffer, &hour_buffer[1], sizeof(hour_buffer) - 1);
   }
   
-  if ((hour_before_1_buffer[0] == '0')) {
+  if (hour_before_1_buffer[0] == '0') {
     memmove(hour_before_1_buffer, &hour_before_1_buffer[1], sizeof(hour_before_1_buffer) - 1);
   }
   
-  if ((hour_after_1_buffer[0] == '0')) {
+  if (hour_after_1_buffer[0] == '0') {
     memmove(hour_after_1_buffer, &hour_after_1_buffer[1], sizeof(hour_after_1_buffer) - 1);
   }
 
@@ -89,15 +91,15 @@ static void white_line_update(GPoint first_point,GPoint second_point, GContext *
 }
 
 static void black_line_update(GPoint first_point,GPoint second_point, GContext *ctx){
-  graphics_context_set_stroke_color(ctx, GColorRed);
+  graphics_context_set_stroke_color(ctx, GColorBlack);
   graphics_context_set_stroke_width(ctx, 1);
   graphics_draw_line(ctx, first_point, second_point);
 }
 
-static void create_background_layer() {
+static void create_background_layer(GColor color) {
   // Create background TextLayer
   s_background_layer = text_layer_create(GRect(0, 0, 144, 168)); // 144 x 166
-  text_layer_set_background_color(s_background_layer, GColorBlack);
+  text_layer_set_background_color(s_background_layer, color);
 }
 
 static void create_am_pm_layer(){
@@ -153,11 +155,11 @@ static void bt_handler(bool connected) {
   }
 }
 
-static void create_second_hour_layer(){ //Hour before Layer
+static void create_second_hour_layer(GColor color){ //Hour before Layer
   // Create main hour TextLayer
   s_before_hour_1_layer = text_layer_create(GRect(2, 10, 45, 50));
   text_layer_set_background_color(s_before_hour_1_layer, GColorClear);
-  text_layer_set_text_color(s_before_hour_1_layer, GColorRed);
+  text_layer_set_text_color(s_before_hour_1_layer, color);
   text_layer_set_text(s_before_hour_1_layer, "00");
   //Apply to TextLayer
   text_layer_set_font(s_before_hour_1_layer, s_time_font);
@@ -175,11 +177,11 @@ static void create_main_hour_layer(){
   text_layer_set_text_alignment(s_main_hour_layer, GTextAlignmentCenter);
 }
 
-static void create_hour_after_layer(){ //Hour after Layer
+static void create_hour_after_layer(GColor color){ //Hour after Layer
   // Create main hour TextLayer
   s_after_hour_1_layer = text_layer_create(GRect(103, 10, 45, 50));
   text_layer_set_background_color(s_after_hour_1_layer, GColorClear);
-  text_layer_set_text_color(s_after_hour_1_layer, GColorRed);
+  text_layer_set_text_color(s_after_hour_1_layer, color);
   text_layer_set_text(s_after_hour_1_layer, "00");
   //Apply to TextLayer
   text_layer_set_font(s_after_hour_1_layer, s_time_font);
@@ -279,58 +281,64 @@ static void battery_handler(BatteryChargeState new_state) {
   }
 }
 
-static void main_window_load(Window *window) {
-  s_time_font_big = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MECHA_34));
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MECHA_24));
-  s_time_font_medium = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MECHA_18));
-  s_time_font_small = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MECHA_14));
-  s_time_font_extra_small = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MECHA_10));
-  // Create background layer and add it as a child layer to the Window's root layer
-  create_background_layer();
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_background_layer));
-
-  // Add it as a child layer to the Window's root layer
-  create_am_pm_layer();
-  layer_add_child(text_layer_get_layer(s_background_layer), text_layer_get_layer(s_am_pm_layer));
+static void create_weather_layer(){
+  s_weather_layer = text_layer_create(GRect(0, 0, 144, 20));
+  text_layer_set_background_color(s_weather_layer, GColorClear);
   
+  text_layer_set_text_color(s_weather_layer, GColorWhite);
+  text_layer_set_text(s_weather_layer, "Loading...");
+  
+  text_layer_set_font(s_weather_layer, s_time_font_small);
+  text_layer_set_text_alignment(s_weather_layer, GTextAlignmentCenter);
+}
+
+static void main_window_load(Window *window) {
+  s_time_font_big = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MECHA_BOLD_34));
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MECHA_BOLD_24));
+  s_time_font_medium = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MECHA_BOLD_18));
+  s_time_font_small = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MECHA_BOLD_14));
+  s_time_font_extra_small = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MECHA_BOLD_10));
+  // Create background layer
+  create_background_layer(GColorRed);
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_background_layer));
+  // Create AM-PM layer
+  create_am_pm_layer();
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_am_pm_layer));
+  // Create Hour layer and its child layers
   create_hour_layer();
-  layer_add_child(text_layer_get_layer(s_background_layer), text_layer_get_layer(s_hour_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_hour_layer));
   
   create_main_hour_layer();
   layer_add_child(text_layer_get_layer(s_hour_layer), text_layer_get_layer(s_main_hour_layer));
   
-  create_second_hour_layer();
+  create_second_hour_layer(GColorBlack);
   layer_add_child(text_layer_get_layer(s_hour_layer), text_layer_get_layer(s_before_hour_1_layer));
   
-  create_hour_after_layer();
+  create_hour_after_layer(GColorBlack);
   layer_add_child(text_layer_get_layer(s_hour_layer), text_layer_get_layer(s_after_hour_1_layer));
-  
-  // Minutes Layers
+  // Create Minutes Layers and its child layers
   create_minutes_layer();
-  layer_add_child(text_layer_get_layer(s_background_layer), s_main_minutes_layer);
-  
+  layer_add_child(window_get_root_layer(window), s_main_minutes_layer);
+  // Create Minutes Layers
   create_date_layer();
-  layer_add_child(text_layer_get_layer(s_background_layer), text_layer_get_layer(s_date_layer));
-  
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_date_layer));
   // BT Layer
   create_bt_icon_layer();
-  layer_add_child(text_layer_get_layer(s_background_layer), bitmap_layer_get_layer(s_bt_layer));
-  
+  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_bt_layer));
   // Battery Layer
   create_battery_icon_layer();
-  layer_add_child(text_layer_get_layer(s_background_layer), bitmap_layer_get_layer(s_battery_layer));
-  
-  // Make sure the time is displayed from the start
-  update_time();
-  
+  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_battery_layer));
+  // Weather Layer
+  create_weather_layer();
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
   // Set the update_proc
   layer_set_update_proc(s_main_minutes_layer, canvas_update_proc);
-  
   // Show current connection state
   bt_handler(bluetooth_connection_service_peek());
-  
   // Get the current battery level
   battery_handler(battery_state_service_peek());
+  // Make sure the time is displayed from the start
+  update_time();
 }
 
 static void main_window_unload(Window *window) {
@@ -349,6 +357,7 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_before_hour_1_layer);
   text_layer_destroy(s_after_hour_1_layer);
   text_layer_destroy(s_date_layer);
+  text_layer_destroy(s_weather_layer);
   
   layer_destroy(s_main_minutes_layer);
   
@@ -361,8 +370,87 @@ static void main_window_unload(Window *window) {
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
-}
   
+  // Get weather update every 30 minutes
+  if(tick_time->tm_min % 30 == 0) {
+    // Begin dictionary
+    DictionaryIterator *iter;
+    app_message_outbox_begin(&iter);
+
+    // Add a key-value pair
+    dict_write_uint8(iter, 0, 0);
+
+    // Send the message!
+    app_message_outbox_send();
+  }
+}
+
+static void set_color(char is_red[]){
+  if (strncmp(is_red, "on", 2) == 0){
+    APP_LOG(APP_LOG_LEVEL_INFO, "Color red is here");
+    create_background_layer(GColorRed);
+    create_second_hour_layer(GColorRed);
+    create_hour_after_layer(GColorRed);
+  }else{
+    APP_LOG(APP_LOG_LEVEL_INFO, "Color black is here");
+    create_background_layer(GColorBlack);
+    create_second_hour_layer(GColorBlack);
+    create_hour_after_layer(GColorBlack);
+  }
+}
+
+static void set_weather(char temperature_buffer[8], char conditions_buffer[32]){
+  static char weather_layer_buffer[32];
+  // Assemble full string and display
+  snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s | %s", temperature_buffer, conditions_buffer);
+  text_layer_set_text(s_weather_layer, weather_layer_buffer);
+}
+
+static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
+  // Store incoming information
+  static char temperature_buffer[8];
+  static char conditions_buffer[32];
+  
+  // Read first item
+  Tuple *t = dict_read_first(iterator);
+
+  // For all items
+  while(t != NULL) {
+    // Which key was received?
+    switch(t->key) {
+    case KEY_TEMPERATURE:
+      snprintf(temperature_buffer, sizeof(temperature_buffer), "%dC", (int)t->value->int32);
+      break;
+    case KEY_CONDITIONS:
+      snprintf(conditions_buffer, sizeof(conditions_buffer), "%s", t->value->cstring);
+      break;
+    case KEY_IS_RED_ON:
+      set_color(t->value->cstring);
+      break;
+    default:
+      APP_LOG(APP_LOG_LEVEL_INFO, "Key %d not recognized!", (int)t->key);
+      break;
+    }
+
+    // Look for next item
+    t = dict_read_next(iterator);
+  }
+  
+  set_weather(temperature_buffer, conditions_buffer);
+}
+
+static void inbox_dropped_callback(AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped!");
+}
+
+static void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed!");
+}
+
+static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
+  APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
+}
+
 static void init() {
   // Create main Window element and assign to pointer
   s_main_window = window_create();
@@ -378,6 +466,15 @@ static void init() {
   
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  
+  // Register callbacks
+  app_message_register_inbox_received(inbox_received_callback);
+  app_message_register_inbox_dropped(inbox_dropped_callback);
+  app_message_register_outbox_failed(outbox_failed_callback);
+  app_message_register_outbox_sent(outbox_sent_callback);
+  
+  // Open AppMessage
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
   
   // Subscribe to Bluetooth updates
   bluetooth_connection_service_subscribe(bt_handler);
