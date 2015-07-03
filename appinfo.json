@@ -14,32 +14,7 @@
     "resources": {
         "media": [
             {
-                "file": "fonts/mecha.ttf",
-                "name": "MECHA_BOLD_10",
-                "type": "font"
-            },
-            {
-                "file": "fonts/mecha.ttf",
-                "name": "MECHA_BOLD_14",
-                "type": "font"
-            },
-            {
-                "file": "fonts/mecha.ttf",
-                "name": "MECHA_BOLD_18",
-                "type": "font"
-            },
-            {
-                "file": "fonts/mecha.ttf",
-                "name": "MECHA_BOLD_24",
-                "type": "font"
-            },
-            {
-                "file": "fonts/mecha.ttf",
-                "name": "MECHA_BOLD_34",
-                "type": "font"
-            },
-            {
-                "file": "images/bluetooth.png",
+                "file": "images/bluetooth_small_on.png",
                 "name": "BT_ON",
                 "type": "png-trans"
             },
@@ -49,18 +24,8 @@
                 "type": "png-trans"
             },
             {
-                "file": "images/battery__low_20.png",
-                "name": "BATTERY_20",
-                "type": "png-trans"
-            },
-            {
-                "file": "images/battery__low_40.png",
-                "name": "BATTERY_40",
-                "type": "png-trans"
-            },
-            {
-                "file": "images/battery__low_60.png",
-                "name": "BATTERY_60",
+                "file": "images/battery__low_100.png",
+                "name": "BATTERY_100",
                 "type": "png-trans"
             },
             {
@@ -69,48 +34,43 @@
                 "type": "png-trans"
             },
             {
-                "file": "images/battery__low_100.png",
-                "name": "BATTERY_100",
+                "file": "images/battery__low_60.png",
+                "name": "BATTERY_60",
                 "type": "png-trans"
             },
             {
-                "file": "fonts/mechan.ttf",
-                "name": "MECHA_34",
+                "file": "images/battery__low_40.png",
+                "name": "BATTERY_40",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/battery__low_20.png",
+                "name": "BATTERY_20",
+                "type": "png-trans"
+            },
+            {
+                "file": "fonts/mecha.ttf",
+                "name": "MECHA_BOLD_34",
                 "type": "font"
             },
             {
-                "file": "fonts/mechan.ttf",
-                "name": "MECHA_24",
+                "file": "fonts/mecha.ttf",
+                "name": "MECHA_BOLD_24",
                 "type": "font"
             },
             {
-                "file": "fonts/mechan.ttf",
-                "name": "MECHA_18",
+                "file": "fonts/mecha.ttf",
+                "name": "MECHA_BOLD_18",
                 "type": "font"
             },
             {
-                "file": "fonts/mechan.ttf",
-                "name": "MECHA_14",
+                "file": "fonts/mecha.ttf",
+                "name": "MECHA_BOLD_14",
                 "type": "font"
             },
             {
-                "file": "fonts/mechan.ttf",
-                "name": "MECHA_10",
-                "type": "font"
-            },
-            {
-                "file": "fonts/SimplySquare.ttf",
-                "name": "SIMPLY_SQUARE_18",
-                "type": "font"
-            },
-            {
-                "file": "fonts/SimplySquare.ttf",
-                "name": "SIMPLY_SQUARE_28",
-                "type": "font"
-            },
-            {
-                "file": "fonts/SimplySquare.ttf",
-                "name": "SIMPLY_SQUARE_38",
+                "file": "fonts/mecha.ttf",
+                "name": "MECHA_BOLD_10",
                 "type": "font"
             }
         ]

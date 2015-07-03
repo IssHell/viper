@@ -415,7 +415,6 @@ static void set_weather(char temperature_buffer[8], char conditions_buffer[32]){
     // Assemble full string and display
     snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%sC | %s", temperature_buffer, conditions_buffer);
     text_layer_set_text(s_weather_layer, weather_layer_buffer);
-    text_layer_set_background_color(s_weather_layer, GColorBlack);
   }
 }
 
