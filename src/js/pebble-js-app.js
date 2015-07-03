@@ -87,7 +87,7 @@ Pebble.addEventListener('webviewclosed',
     var configuration = JSON.parse(decodeURIComponent(e.response));
     console.log('Configuration window returned: ', JSON.stringify(configuration));
     var dictionary = {
-      "KEY_IS_RED_ON": configuration.is_json_on
+      "KEY_UPDATE_UNITS": configuration.use_fahrenheit
     };
     console.log('Configuration dictionary: ', JSON.stringify(dictionary));
     // Send to Pebble
