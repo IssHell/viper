@@ -4,7 +4,9 @@
 #define KEY_TEMPERATURE 0
 #define KEY_CONDITIONS 1
 #define KEY_UPDATE_UNITS 2
-#define PERSIST_KEY_UNIT_FORMAT 3
+#define KEY_UPDATE_THEME 3
+#define PERSIST_KEY_UNIT_FORMAT 10
+#define PERSIST_KEY_THEME 11
 
 static Window *s_main_window;
 static TextLayer *s_background_layer;
@@ -406,7 +408,6 @@ static void set_weather(char temperature_buffer[8], char conditions_buffer[32]){
   static float final;
   if (persist_read_int(PERSIST_KEY_UNIT_FORMAT) == 1){
     x = atoi(temperature_buffer);
-    APP_LOG(APP_LOG_LEVEL_INFO, "X: %d", x);
     fahrenheit = (float)x;
     final = 1.8 * fahrenheit + 32;
     snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%dF | %s", Round(final), conditions_buffer);
@@ -418,16 +419,25 @@ static void set_weather(char temperature_buffer[8], char conditions_buffer[32]){
   }
 }
 
-static void update_unit_setting(int unit){
+static void update_unit_setting(int unit, int theme){
   if (!(persist_exists(PERSIST_KEY_UNIT_FORMAT)) || persist_read_int(PERSIST_KEY_UNIT_FORMAT) != unit) {
     persist_write_int(PERSIST_KEY_UNIT_FORMAT, unit);
   }
+  if (!(persist_exists(PERSIST_KEY_THEME)) || persist_read_int(PERSIST_KEY_THEME) != theme) {
+    persist_write_int(PERSIST_KEY_THEME, theme);
+  }
 }
+
+// static void update_theme(int theme){
+//   APP_LOG(APP_LOG_LEVEL_INFO, "Theme: %d", theme);
+// }
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Store incoming information
   static char temperature_buffer[8];
   static char conditions_buffer[32];
+  static int unit_buffer;
+  static int theme_buffer;
   
   // Read first item
   Tuple *t = dict_read_first(iterator);
@@ -437,7 +447,10 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     // Which key was received?
     switch(t->key) {
     case KEY_UPDATE_UNITS:
-      update_unit_setting((int)t->value->int32);
+      unit_buffer = (int)t->value->int32;
+      break;
+    case KEY_UPDATE_THEME:
+      theme_buffer = (int)t->value->int32;
       break;
     case KEY_TEMPERATURE:
       snprintf(temperature_buffer, sizeof(temperature_buffer), "%d", (int)t->value->int32);
@@ -453,8 +466,11 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     // Look for next item
     t = dict_read_next(iterator);
   }
-  
+  update_unit_setting(unit_buffer, theme_buffer);
   set_weather(temperature_buffer, conditions_buffer);
+//   if (!(persist_exists(PERSIST_KEY_THEME)) || persist_read_int(PERSIST_KEY_THEME) != theme_buffer) {
+//     update_theme(theme_buffer);
+//   }
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {
